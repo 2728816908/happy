@@ -49,6 +49,17 @@ jobs:
       - name: Build wire package
         run: pnpm --filter @slopus/happy-wire build
 
+      - name: Prepare self-host trust certificate
+        working-directory: packages/happy-app
+        run: |
+          mkdir -p plugins/certs
+          if [ ! -f plugins/certs/selfhosted_server.pem ]; then
+            openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes \
+              -keyout /tmp/happy-selfhosted-server.key \
+              -out plugins/certs/selfhosted_server.pem \
+              -subj "/CN=happy-selfhosted.local"
+          fi
+
       - name: Prebuild Android project
         working-directory: packages/happy-app
         env:
