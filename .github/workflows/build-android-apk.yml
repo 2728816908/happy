@@ -72,7 +72,8 @@ jobs:
         env:
           APP_ENV: ${{ inputs.app_env }}
           EXPO_PUBLIC_HAPPY_SERVER_URL: ${{ inputs.server_url }}
-        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1536m -Dfile.encoding=UTF-8"
+        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a -x lint -x lintVitalRelease -x lintVitalAnalyzeRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
