@@ -65,6 +65,11 @@ export async function doAuth(): Promise<Credentials | null> {
  * Display authentication method selector and return user choice
  */
 function selectAuthenticationMethod(): Promise<AuthMethod | null> {
+    const envMethod = process.env.HAPPY_AUTH_METHOD?.toLowerCase();
+    if (envMethod === 'mobile' || envMethod === 'web') {
+        return Promise.resolve(envMethod);
+    }
+
     return new Promise((resolve) => {
         let hasResolved = false;
 
