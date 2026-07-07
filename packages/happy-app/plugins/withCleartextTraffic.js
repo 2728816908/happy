@@ -1,7 +1,8 @@
 const { withAndroidManifest } = require('@expo/config-plugins');
 
 /**
- * Allow cleartext (plain HTTP) traffic on Android for non-production builds.
+ * Allow cleartext (plain HTTP) traffic on Android when the configured server
+ * URL uses http://.
  *
  * Why: Android targetSdk >= 28 blocks cleartext HTTP by default, so a *release*
  * APK cannot reach a self-hosted Happy server on a LAN address like
@@ -10,12 +11,11 @@ const { withAndroidManifest } = require('@expo/config-plugins');
  * usesCleartextTraffic into the debug manifest (for Metro).
  *
  * This plugin sets android:usesCleartextTraffic="true" on the <application> tag
- * for preview/development variants so LAN HTTP servers work in installable test
- * builds. Production is left untouched (still secure / HTTPS-only).
+ * for self-hosted HTTP servers. HTTPS builds keep Android's default policy.
  */
 module.exports = function withCleartextTraffic(config) {
-    const variant = process.env.APP_ENV || 'development';
-    if (variant === 'production') {
+    const serverUrl = process.env.EXPO_PUBLIC_HAPPY_SERVER_URL || '';
+    if (!serverUrl.toLowerCase().startsWith('http://')) {
         return config;
     }
 

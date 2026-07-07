@@ -14,6 +14,7 @@ import { Modal } from '@/modal';
 import { t } from '@/text';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { QRCode } from '@/components/qr/QRCode';
+import { getServerUrl } from '@/sync/serverConfig';
 
 const stylesheet = StyleSheet.create((theme) => ({
     scrollView: {
@@ -103,7 +104,8 @@ export default function Restore() {
 
         } catch (error) {
             console.error('Restore error:', error);
-            Modal.alert(t('common.error'), t('connect.invalidSecretKey'));
+            const message = error instanceof Error ? error.message : String(error);
+            Modal.alert(t('common.error'), `${t('connect.invalidSecretKey')}\n\nServer: ${getServerUrl()}\n${message}`);
         }
     };
 

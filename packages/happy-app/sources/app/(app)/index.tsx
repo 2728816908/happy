@@ -14,6 +14,8 @@ import { trackAccountCreated, trackAccountRestored } from '@/track';
 import { HomeHeaderNotAuth } from "@/components/HomeHeader";
 import { MainView } from "@/components/MainView";
 import { t } from '@/text';
+import { Modal } from '@/modal';
+import { getServerUrl } from '@/sync/serverConfig';
 
 export default function Home() {
     const auth = useAuth();
@@ -46,6 +48,8 @@ function NotAuthenticated() {
             }
         } catch (error) {
             console.error('Error creating account', error);
+            const message = error instanceof Error ? error.message : String(error);
+            Modal.alert(t('common.error'), `Failed to create account on ${getServerUrl()}: ${message}`);
         }
     }
 
